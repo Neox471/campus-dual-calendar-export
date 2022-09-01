@@ -4,7 +4,7 @@
     const END_DATE_INPUT = 'Enddatum';
 
     // sets the data attributes of the script tag so we can use the data in the content script
-    // user and hash are global variables on the site ¯\_(ツ)_/¯
+    // user and hash are global variables on the site
     const setDataAttributes = () => {
         // eslint-disable-next-line no-undef
         document.currentScript.setAttribute('data-user', user);
