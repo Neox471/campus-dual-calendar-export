@@ -1,18 +1,28 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "Campus-Dual Calendar Export",
   "description": "A chrome extension to export the calendar from Campus-Dual.",
   "version": "1.0",
   "icons": { "48": "icon48.png" },
   "content_scripts": [{
     "matches": ["https://selfservice.campus-dual.de/room/index"],
-    "js": ["content.js"],
+    "js": ["inject.js"],
     "css": ["content.css"],
     "run_at": "document_end"
+  }],
+  "web_accessible_resources": [{
+    "resources": ["content.js"],
+    "matches": ["https://selfservice.campus-dual.de/*"]
   }],
   "permissions": [
     "downloads",
     "activeTab",
+    "tabs"    
+  ],
+  "host_permissions": [
     "https://selfservice.campus-dual.de/room/index"
+  ],
+  "optional_host_permissions": [
+    "*://*/*"
   ]
 }
