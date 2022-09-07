@@ -5,5 +5,5 @@
     injectScript.onload = function() {
         this.remove();
     };
-    (document.head || document.documentElement).appendChild(s);
+    (document.head || document.documentElement).appendChild(injectScript);
 })();
