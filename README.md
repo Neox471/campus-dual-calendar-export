@@ -1,7 +1,16 @@
-Firefox Add-on zum exportieren des Stundenplans von Campus Dual
+# Chrome extension to export the calendar from Campus-Dual #
 
-![wow kunst](logo.png)
+![calendar logo with "campus dual calendar export" written on it](icon.png)
 
-Zur Installation einfach die [`campus_dual_stundenplan_export-1.0-an+fx.xpi`](https://github.com/jnskw/campus-dual-calendar-export/releases/download/1.0.0/campus_dual_stundenplan_export-1.0-an.fx.xpi)-Datei in Firefox ziehen und auf installieren klicken. 
+## Installation ##
+* clone repository or download ZIP
+* go to chrome://extensions
+* enable developer mode
+* load unpacked extension
+* choose the folder
 
-Danach den [Kalender auf Campus-Dual aufrufen](https://selfservice.campus-dual.de/room/index) und die wunderschönen neuen Knöpfe bewundern.
+## Usage ##
+* log-in to Campus-Dual
+* navigate to https://selfservice.campus-dual.de/room/index
+* use the date inputs at the bottom of the page to set a start-date and a end-date
+* press "Kalendar herunterladen"
