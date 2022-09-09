@@ -1,3 +1,9 @@
+///// print watermark to console - no use /////
+console.log('Script loaded successfully.');
+console.log('Extension created by https://github.com/jnskw - updated and maintained by https://github.com/Neox471');
+console.log('Visit repository here: https://github.com/Neox471/campus-dual-calendar-export');
+///////////////////////////////////////////////
+
 // def constants for later use
 const SCRIPT_ID = 'CDCalExport';
 const START_DATE_INPUT = 'Anfangsdatum';
