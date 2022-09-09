@@ -22,6 +22,7 @@ const setDataAttributes = () => {
     document.currentScript.setAttribute('data-hash', hash);
 };
 
+// create download button
 const createDownloadButton = (text, buttonFunction) => {
     const button = document.createElement('a');
     button.setAttribute('class', SCRIPT_ID);
@@ -32,6 +33,7 @@ const createDownloadButton = (text, buttonFunction) => {
     return button;
 };
 
+// create date input
 const createDateInput = (labelText) => {
     const id = labelText.split(' ').join('');
     const input = document.createElement('input');
@@ -49,9 +51,10 @@ const createDateInput = (labelText) => {
     return container;
 };
 
+// generate download link
 const setDownloadLink = (clickEvent) => {
     const button = clickEvent.target;
-    button.text = 'es lädt';
+    button.text = 'Download wird gestartet...';
 
     startDateInput = document.getElementById(START_DATE_INPUT.split(' ').join(''));
     endDateInput = document.getElementById(END_DATE_INPUT.split(' ').join(''));
@@ -62,10 +65,11 @@ const setDownloadLink = (clickEvent) => {
         Math.round( startDateInput.valueAsNumber / 1000 ),
         Math.round( endDateInput.valueAsNumber / 1000 ),
     ).then(events => generateCalString(events)).then(generateDownloadLink).then(() => {
-        button.text = 'Fertig. Wenn ihr noch Downloadwünsche habt, ruft sie einfach. Lad die selbe Datei nochmal. Alles klar, die selbe Datei. Und los!';
+        button.text = 'Erfolgreich heruntergeladen! Klicken, um erneut herunterzuladen.';
     });
 };
 
+// create date label
 const createDateLabel = (id, labelText) => {
     const label = document.createElement('label');
     label.setAttribute('class', SCRIPT_ID);
@@ -75,15 +79,17 @@ const createDateLabel = (id, labelText) => {
     return label;
 };
 
-
+// fetch events
 const getEvents = (user, hash, start, end) => {
     const base = 'https://selfservice.campus-dual.de/room/json';
 
     const url = `${base}?userid=${user}&hash=${hash}&start=${start}&end=${end}`;
 
+    console.log(`${url}`)
     return fetch(url).then(success => success.json());
 };
 
+// generate download link
 const generateDownloadLink = (calendarString) => {
     const downloadLink = document.createElement('a');
     downloadLink.download = 'BA-Kalender.ics';
@@ -103,6 +109,7 @@ const generateDownloadLink = (calendarString) => {
     calendar.removeChild(downloadLink);
 };
 
+// get data attribute
 const getDataAttribute = (attributeName) => {
     const scriptNode = document.querySelector(`#${SCRIPT_ID}`);
     const attributeValue = scriptNode.getAttribute(`data-${attributeName}`);
@@ -110,6 +117,7 @@ const getDataAttribute = (attributeName) => {
     return attributeValue;
 };
 
+// generate calendar string
 const generateCalString = (events) => {
     const start = 'BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:Campus-Dual-Calendar-Export\nX-WR-CALNAME:BA-Dresden\nX-WR-TIMEZONE:Europe/Berlin\n';
     const end = 'END:VCALENDAR';
@@ -122,19 +130,34 @@ const generateCalString = (events) => {
     return calstring;
 };
 
+// build actual calendar-file
 const buildICalEvent = (event) => {
-    const iCalEvent = [
-        `BEGIN:VEVENT`,
-        `DTSTAMP:${formatDateTime(new Date(), true)}`,
-        `UID:${event.title}${event.start + event.end}`,
-        `SUMMARY:${event.title} | ${event.room} | ${event.instructor}`,
-        `LOCATION:${event.room}`,
-        `DTSTART:${formatDateTime(event.start, false)}`,
-        `DTEND:${formatDateTime(event.end, false)}`,
-        `END:VEVENT\n`,
-    ].join('\n');
+    // since the json return when fetching events seems broken we filter the incoming events here
+    var startDate = startDateInput.value;
+    var unixStartTime = parseInt((new Date(startDate).getTime() / 1000).toFixed(0));
+    var endDate = new Date(endDateInput.value);
+    var endDate = endDate.setDate(endDate.getDate() + 1);
+    var unixEndTime = parseInt((new Date(endDate).getTime() / 1000).toFixed(0)); 
+    if(event.start >= unixStartTime && event.end <= unixEndTime) {
+        const iCalEvent = [
+            `BEGIN:VEVENT`,
+            `DTSTAMP:${formatDateTime(new Date(), true)}`,
+            `UID:${event.title}${event.start + event.end}`,
+            `SUMMARY:${event.title} | ${event.room} | ${event.instructor}`,
+            `LOCATION:${event.room}`,
+            `DTSTART:${formatDateTime(event.start, false)}`,
+            `DTEND:${formatDateTime(event.end, false)}`,
+            `END:VEVENT\n`,
+        ].join('\n');
 
-    return iCalEvent;
+        return iCalEvent;
+    }
+    else {
+        const iCalEvent = [
+            ``,
+        ]
+        return iCalEvent;
+    }
 };
 
 const formatDateTime = (date, utc) => {
@@ -156,8 +179,7 @@ const formatDateTime = (date, utc) => {
     return datestring;
 };
 
-/// Main
-
+// extend current page with actual app
 const calendar = document.getElementById('calendar');
 
 injectScript(setDataAttributes).then(() => {
